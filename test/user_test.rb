@@ -21,4 +21,77 @@ class UserTest < Minitest::Test
 
     assert_equal "Ali", ali.name
   end
+
+  def test_sal_can_have_jokes
+    joke = Joke.new({id: 1, question: "Why did the strawberry cross the road?", answer: "Because his mother was in a jam."})
+    sal = User.new("Sal")
+
+    assert_equal [], sal.jokes
+  end
+
+  def test_sal_can_learn_jokes
+    joke = Joke.new({id: 1, question: "Why did the strawberry cross the road?", answer: "Because his mother was in a jam."})
+    sal = User.new("Sal")
+    sal.learn(joke)
+
+    expected = [joke]
+    actual = sal.jokes
+  end
+
+  def test_user_can_tell_jokes
+    joke = Joke.new({id: 1, question: "Why did the strawberry cross the road?", answer: "Because his mother was in a jam."})
+    sal = User.new("Sal")
+    ali = User.new("Ali")
+    sal.tell(ali, joke)
+
+    expected = [joke]
+    actual = ali.jokes
+
+    assert_equal expected, actual
+  end
+
+  def test_count_jokes_that_ali_has
+    joke = Joke.new({id: 1, question: "Why did the strawberry cross the road?", answer: "Because his mother was in a jam."})
+    sal = User.new("Sal")
+    ali = User.new("Ali")
+    sal.tell(ali, joke)
+
+    assert_equal 1, ali.jokes.count
+  end
+
+  def test_ilana_can_learn_joke_1
+    joke_1 = Joke.new({id: 1, question: "Why did the strawberry cross the road?", answer: "Because his mother was in a jam."})
+    joke_2 = Joke.new({id: 2, question: "How do you keep a lion from charging?", answer: "Take away its credit cards."})
+    ilana = User.new("Ilana")
+    josh = User.new("Josh")
+
+    ilana.learn(joke_1)
+    ilana.learn(joke_2)
+    ilana.perform_routine_for(josh)
+
+    expected = [joke_1, joke_2]
+    actual = josh.jokes
+
+    assert_equal expected, actual
+  end
+
+  def test_count_josh_jokes
+    joke_1 = Joke.new({id: 1, question: "Why did the strawberry cross the road?", answer: "Because his mother was in a jam."})
+    joke_2 = Joke.new({id: 2, question: "How do you keep a lion from charging?", answer: "Take away its credit cards."})
+    ilana = User.new("Ilana")
+    josh = User.new("Josh")
+
+    ilana.learn(joke_1)
+    ilana.learn(joke_2)
+    ilana.perform_routine_for(josh)
+
+    assert_equal 2, josh.jokes.count
+  end
+
+  def test_casey_can_learn_new_routine
+    casey = User.new("Casey")
+    casey.learn_routine('./jokes.csv')
+
+    assert_equal 100, casey.jokes.count
+  end
 end
